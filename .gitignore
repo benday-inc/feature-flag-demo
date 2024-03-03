@@ -482,3 +482,4 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+/Benday.Presidents/.cr/personal/FavoritesList/List.xml

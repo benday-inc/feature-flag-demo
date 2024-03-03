@@ -148,9 +148,9 @@ namespace Benday.Presidents.Api.Features
 
                 Initialize(features);
             }
-            catch (SqlException)
+            catch (Exception)
             {
-                Console.WriteLine("FeatureManager got a SqlException.");
+                Console.WriteLine("FeatureManager got a Exception.");
             }
         }
 

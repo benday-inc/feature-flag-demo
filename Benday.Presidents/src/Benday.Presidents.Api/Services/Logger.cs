@@ -1,12 +1,8 @@
-using Benday.Presidents.Common;
 using Benday.Presidents.Api.DataAccess;
 using Benday.Presidents.Api.Interfaces;
+using Benday.Presidents.Common;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Net.Http.Headers;
 
 namespace Benday.Presidents.Api.Services
 {
@@ -14,12 +10,11 @@ namespace Benday.Presidents.Api.Services
     {
         private IPresidentsDbContext _DatabaseContext;
         private IFeatureManager _FeatureManager;
-        private IHttpContextAccessor _ContextAccessor;
+        private IUsernameProvider _UsernameProvider;
 
-        public Logger(IHttpContextAccessor contextAccessor, IPresidentsDbContext databaseContext, IFeatureManager featureManager)
+
+        public Logger(IUsernameProvider usernameProvider, IPresidentsDbContext databaseContext, IFeatureManager featureManager)
         {
-            if (contextAccessor == null)
-                throw new ArgumentNullException(nameof(contextAccessor), $"{nameof(contextAccessor)} is null.");
             if (featureManager == null)
                 throw new ArgumentNullException("featureManager", "featureManager is null.");
             if (databaseContext == null)
@@ -27,7 +22,7 @@ namespace Benday.Presidents.Api.Services
 
             _DatabaseContext = databaseContext;
             _FeatureManager = featureManager;
-            _ContextAccessor = contextAccessor;
+            _UsernameProvider = usernameProvider;
         }
 
         public void LogCustomerSatisfaction(string feedback)
@@ -61,30 +56,11 @@ namespace Benday.Presidents.Api.Services
 
             _DatabaseContext.LogEntries.Add(entry);
             _DatabaseContext.SaveChanges();
-        }
-
-        private Microsoft.AspNetCore.Http.HttpContext GetHttpContext()
-        {
-            return _ContextAccessor.HttpContext;
-        }
-
-        private string SafeToString(IHeaderDictionary headers, string headerName)
-        {
-            if (headers.ContainsKey(headerName) == true)
-            {
-                return headers[headerName];
-            }
-            else
-            {
-                return string.Empty;
-            }
-        }
+        }        
 
         private LogEntry GetPopulatedLogEntry()
         {
             var returnValue = new LogEntry();
-
-            var context = GetHttpContext();
 
             string username = String.Empty;
             string referrer = String.Empty;
@@ -92,22 +68,9 @@ namespace Benday.Presidents.Api.Services
             string userAgent = String.Empty;
             string ipAddress = String.Empty;
 
-            if (context != null)
-            {
-                if (context.Request != null)
-                {
-                    referrer = SafeToString(context.Request.Headers, HeaderNames.Referer);
-                    requestUrl = SafeToString(context.Request.Path.Value);
-                    userAgent = SafeToString(context.Request.Headers, HeaderNames.UserAgent);
-                    ipAddress = SafeToString(context.Connection.RemoteIpAddress);
-                }
 
-                if (context.User != null && context.User.Identity != null)
-                {
-                    username = context.User.Identity.Name;
-                }
-            }
-
+            username = _UsernameProvider.GetUsername();
+                        
             returnValue.LogDate = DateTime.UtcNow;
             returnValue.ReferrerUrl = referrer;
             returnValue.RequestUrl = requestUrl;
@@ -117,42 +80,6 @@ namespace Benday.Presidents.Api.Services
             returnValue.Message = String.Empty;
 
             return returnValue;
-        }
-
-        private string SafeToString(Uri value)
-        {
-            if (value == null)
-            {
-                return string.Empty;
-            }
-            else
-            {
-                return value.ToString();
-            }
-        }
-
-        private string SafeToString(string value)
-        {
-            if (value == null)
-            {
-                return string.Empty;
-            }
-            else
-            {
-                return value;
-            }
-        }
-
-        private string SafeToString(IPAddress address)
-        {
-            if (address == null)
-            {
-                return string.Empty;
-            }
-            else
-            {
-                return address.ToString();
-            }
         }
     }
 }
