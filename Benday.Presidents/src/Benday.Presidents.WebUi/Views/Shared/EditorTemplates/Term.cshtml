@@ -1,0 +1,23 @@
+﻿@model Benday.Presidents.Api.Models.Term
+
+@{
+    Layout = null;
+}
+<tr>
+    <td>
+        @Html.EditorFor(model => model.IsDeleted, "form-control")
+    </td>
+    <td>
+        @Html.EditorFor(model => model.Number, "form-control")
+    </td>
+    <td >
+        @Html.HiddenFor(model => model.Id)
+        @Html.EditorFor(model => model.Role, "form-control")
+    </td>
+    <td >
+        @Html.EditorFor(model => model.Start, "form-control")
+    </td>
+    <td >
+        @Html.EditorFor(model => model.End, "form-control")
+    </td>
+</tr>

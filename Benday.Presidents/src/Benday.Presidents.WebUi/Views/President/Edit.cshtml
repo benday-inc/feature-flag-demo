@@ -1,0 +1,195 @@
+﻿@model Benday.Presidents.Api.Models.President
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>President</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.Id, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BirthDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.BirthDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DeathDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DeathDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DeathDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BirthCity, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.BirthCity, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.BirthCity, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BirthState, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.BirthState, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.BirthState, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DeathCity, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DeathCity, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DeathCity, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DeathState, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DeathState, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DeathState, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ImageFilename, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ImageFilename, new { htmlAttributes = new { @class = "form-control readonly" } })
+                @Html.ValidationMessageFor(model => model.ImageFilename, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group table-responsive">
+            @Html.Hidden("TermsCount", Model.Terms.Count)
+
+
+            <table id="TermsTable" class="table">
+                <thead>
+                    <tr>
+                        <th>Delete</th>
+                        <th>President #</th>
+                        <th>Role</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    @Html.EditorFor(model => model.Terms)
+
+
+                </tbody>
+            </table>
+
+            <a id="linkAddTermsRow" onclick="addTermsRow();">add term</a>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script id="templateTermsRow" type="text/x-custom-template">
+    <tr>
+        <td>
+            <input class="check-box" data-val="true" data-val-required="The IsDeleted field is required." 
+                   id="Terms_%%ROWNUMBER%%__IsDeleted" name="Terms[%%ROWNUMBER%%].IsDeleted" type="checkbox" value="true" /><input 
+                           name="Terms[%%ROWNUMBER%%].IsDeleted" type="hidden" value="false" />
+
+        </td>
+        <td>
+            <input name="Terms[%%ROWNUMBER%%].Number" 
+                   class="text-box single-line valid" 
+                   id="Terms_%%ROWNUMBER%%__Number" 
+                   aria-invalid="false" 
+                   aria-required="true" 
+                   aria-describedby="Terms_%%ROWNUMBER%%__Number-error" 
+                   type="number" 
+                   value="-1" 
+                   data-val-required="The Number field is required." 
+                   data-val-number="The field Number must be a number." data-val="true">
+        </td>
+        <td>
+            <input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." 
+                   id="Terms_%%ROWNUMBER%%__Id" name="Terms[%%ROWNUMBER%%].Id" type="hidden" value="0" />
+            <input class="text-box single-line" id="Terms_%%ROWNUMBER%%__Role" name="Terms[%%ROWNUMBER%%].Role" type="text" value="President" />
+        </td>
+        <td>
+            <input class="text-box single-line" data-val="true" data-val-date="The field Start must be a date." 
+                   data-val-required="The Start field is required." id="Terms_%%ROWNUMBER%%__Start" name="Terms[%%ROWNUMBER%%].Start" 
+                   type="datetime" value="" />
+        </td>
+        <td>
+            <input class="text-box single-line" data-val="true" 
+                   data-val-date="The field End must be a date." data-val-required="The End field is required." id="Terms_%%ROWNUMBER%%__End" 
+                   name="Terms[%%ROWNUMBER%%].End" type="datetime" value="" />
+        </td>
+    </tr>
+</script>
+
+<script>
+
+
+        function addTermsRow() {
+
+            var hiddenTermsCountControl = $('#TermsCount');
+            var nextRowIndex = hiddenTermsCountControl.val();
+
+            var templateTermsRow = $('#templateTermsRow').html();
+
+            templateTermsRow = templateTermsRow.replace(/%%ROWNUMBER%%/g, nextRowIndex);
+
+            var table = $('#TermsTable tbody');
+            table.append(templateTermsRow)
+
+            nextRowIndex++;
+
+            hiddenTermsCountControl.val(nextRowIndex);
+        }
+
+</script>

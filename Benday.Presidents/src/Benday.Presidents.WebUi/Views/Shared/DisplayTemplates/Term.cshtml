@@ -1,0 +1,9 @@
+﻿@model Benday.Presidents.Api.Models.Term
+@{
+    Layout = null;
+}
+<li>
+    <text>
+        #@Html.DisplayFor(model => model.Number) @Html.DisplayFor(model => model.Role) from @Model.Start.ToString("d") to @Model.End.ToString("d")
+    </text>
+</li>

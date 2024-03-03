@@ -1,0 +1,23 @@
+﻿<style>
+    .feedback-icons {
+        color: yellow;
+            font-size:x-large;
+            vertical-align: middle;
+    }
+</style>
+
+    <ul class="list-inline nav navbar-nav">
+        <li><a onclick="submitFeedback('sad');" href="javascript:void"><i class="fa fa-frown-o feedback-icons"></i></a></li>
+        <li><a onclick="submitFeedback('meh');" href="javascript:void"><i class="fa fa-meh-o feedback-icons"></i></a></li>
+        <li><a onclick="submitFeedback('happy');" href="javascript:void"><i class="fa fa-smile-o feedback-icons"></i></a></li>
+    </ul>
+
+    <script>
+        function submitFeedback(feedbackValue) {
+            url = "@Url.Action("SubmitFeedback", "Feedback")/";
+
+            urlWithFeedback = url.concat(feedbackValue);
+
+            $.ajax(urlWithFeedback);
+        }
+    </script>
