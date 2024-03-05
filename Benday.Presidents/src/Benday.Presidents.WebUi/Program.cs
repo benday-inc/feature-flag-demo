@@ -6,24 +6,26 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Benday.Presidents.WebUi
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            BuildWebHost(args).Run();
-        }
+namespace Benday.Presidents.WebUi;
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseUrls("http://0.0.0.0:80")
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .Build();
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        CreateHostBuilder(args).Build().Run();
     }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder.UseStartup<Startup>();
+        })
+    .ConfigureAppConfiguration(config =>
+    {
+        config.AddJsonFile($"appsettings.unversioned.json", true);
+    });
 }

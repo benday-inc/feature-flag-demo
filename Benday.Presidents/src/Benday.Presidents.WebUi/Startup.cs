@@ -18,6 +18,8 @@ using Benday.Presidents.Api.Features;
 using Benday.Presidents.Api.DataAccess;
 using Benday.Presidents.Api.DataAccess.SqlServer;
 using Benday.Presidents.Common;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
 
 namespace Benday.Presidents.WebUi;
 
@@ -54,7 +56,7 @@ public class Startup
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
     {
         if (env.IsDevelopment())
         {
@@ -68,13 +70,15 @@ public class Startup
 
         app.UseStaticFiles();
 
+        app.UseRouting();
+
         app.UseAuthentication();
 
-        app.UseMvc(routes =>
+        app.UseEndpoints(endpoints =>
         {
-            routes.MapRoute(
+            endpoints.MapControllerRoute(
                 name: "default",
-                template: "{controller=President}/{action=Index}/{id?}");
+                pattern: "{controller=President}/{action=Index}/{id?}");
         });
     }
 
@@ -94,7 +98,10 @@ public class Startup
         services.AddTransient<Api.Services.ILogger, Logger>();
 
         services.AddDbContext<PresidentsDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("default")));
+        {
+            options.UseSqlServer(Configuration.GetConnectionString("default"));
+            options.EnableSensitiveDataLogging(true);
+        });
 
         services.AddTransient<IPresidentsDbContext, PresidentsDbContext>();
 

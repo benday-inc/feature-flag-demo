@@ -44,7 +44,7 @@ namespace Benday.Presidents.Api.DataAccess.SqlServer
                     .Include(x => x.Relationships)
                         .ThenInclude(r1 => r1.ToPerson)
                     .Include(x => x.Relationships)
-                        .ThenInclude(r => r.FromPerson)
+                        
                     .Include(p => p.Facts)
                 where temp.Id == id
                 select temp
