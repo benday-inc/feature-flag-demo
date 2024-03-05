@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Benday.Presidents.Api.DataAccess.SqlServer
 {
-    public class SqlEntityFrameworkPersonRepository : 
+    public class SqlEntityFrameworkPersonRepository :
         SqlEntityFrameworkCrudRepositoryBase<Person>, IRepository<Person>
     {
         public SqlEntityFrameworkPersonRepository(
@@ -37,6 +37,35 @@ namespace Benday.Presidents.Api.DataAccess.SqlServer
                 ).ToList();
         }
 
+        public override void Save(Person saveThis)
+        {
+            if (saveThis.Id != 0)
+            {
+                var knownRelationships = (
+                    from temp in Context.Relationships
+                    where 
+                        temp.FromPersonId == saveThis.Id ||
+                        temp.ToPersonId == saveThis.Id
+                    select temp).ToList();
+
+                // delete relationships that are no longer in the list
+                var relationshipsToDelete = (
+                    from temp in knownRelationships
+                    where
+                        saveThis.Relationships.Any(
+                            r => r.Id == temp.Id) == false
+                    select temp).ToList();
+
+                foreach (var temp in relationshipsToDelete)
+                {
+                    this.Context.Relationships.Remove(temp);
+                    saveThis.Relationships.Remove(temp);
+                }
+            }
+
+            base.Save(saveThis);
+        }
+
         public override Person GetById(int id)
         {
             return (
@@ -44,7 +73,7 @@ namespace Benday.Presidents.Api.DataAccess.SqlServer
                     .Include(x => x.Relationships)
                         .ThenInclude(r1 => r1.ToPerson)
                     .Include(x => x.Relationships)
-                        
+
                     .Include(p => p.Facts)
                 where temp.Id == id
                 select temp

@@ -139,6 +139,7 @@ namespace Benday.Presidents.IntegrationTests
 
             // act
             person1.Relationships.RemoveAt(0);
+
             SystemUnderTest.Save(person1);
 
             // assert
