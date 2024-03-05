@@ -1,12 +1,9 @@
 ﻿using System.Security.Claims;
 using System.Text.Json.Nodes;
-using Benday.CodeGenerator.Api;
-using Benday.CodeGenerator.Api.DomainModels;
-using Benday.CodeGenerator.Api.ServiceLayers;
-using Benday.JsonUtilities;
 
 namespace Benday.WebSecurity;
 
+/*
 public class PopulateClaimsMiddleware : IMiddleware
 {
     private readonly ISecurityConfiguration _configuration;
@@ -415,3 +412,4 @@ public class PopulateClaimsMiddleware : IMiddleware
         return match;
     }
 }
+*/

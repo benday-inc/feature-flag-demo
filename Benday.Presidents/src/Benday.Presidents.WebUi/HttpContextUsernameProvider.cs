@@ -1,15 +1,18 @@
-﻿using Benday.Presidents.Api;
+﻿using Benday.Presidents.Api.Interfaces;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Linq;
 
-namespace Benday.WebSecurity;
+namespace Benday.Presidents.WebUi;
 
 
 public class HttpContextUsernameProvider : IUsernameProvider
 {
-    private readonly IHttpContextAccessor _contextAccessor;
+    private readonly IHttpContextAccessor _ContextAccessor;
 
     public HttpContextUsernameProvider(IHttpContextAccessor contextAccessor)
     {
-        _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor),
+        _ContextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor),
             $"{nameof(contextAccessor)} is null.");
     }
 
@@ -17,7 +20,7 @@ public class HttpContextUsernameProvider : IUsernameProvider
 
     public string GetUsername()
     {
-        var context = _contextAccessor.HttpContext;
+        var context = _ContextAccessor.HttpContext;
 
         if (context != null &&
             context.User != null &&
@@ -25,7 +28,7 @@ public class HttpContextUsernameProvider : IUsernameProvider
             string.IsNullOrWhiteSpace(context.User.Identity.Name) == false)
         {
             return
-                ApiUtilities.SafeToString(context.User.Identity.Name,
+                Benday.Common.StringExtensionMethods.SafeToString(context.User.Identity.Name,
                 "(unknown username)");
         }
         else
