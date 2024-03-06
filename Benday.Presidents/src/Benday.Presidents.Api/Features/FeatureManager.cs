@@ -105,7 +105,7 @@ namespace Benday.Presidents.Api.Features
         {
             get
             {
-                return IsEnabled("Search", true);
+                return IsEnabled("Search", false);
             }
         }
 

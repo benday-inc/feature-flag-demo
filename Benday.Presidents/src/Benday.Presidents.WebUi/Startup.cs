@@ -87,10 +87,8 @@ public class Startup
     {
         // Add application services.
         services.AddTransient<IEmailSender, EmailSender>();
-        // services.AddTransient<IEmailSender, AuthMessageSender>();
-        // services.AddTransient<ISmsSender, AuthMessageSender>();
 
-        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
         services.AddTransient<IUsernameProvider, HttpContextUsernameProvider>();
 
